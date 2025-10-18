@@ -1,22 +1,23 @@
 import { DateTime } from 'luxon'
-import hash from '@adonisjs/core/services/hash'
-import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import hash from '@adonisjs/core/services/hash'
+import { compose } from '@adonisjs/core/helpers'
 import UserDatum from './user_datum.js'
 import type { HasOne } from '@adonisjs/lucid/types/relations'
+import Role from './role.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
   passwordColumnName: 'password',
 })
 
-export default class User extends compose(BaseModel, AuthFinder) {
+export default class Admin extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
 
   @column()
-  declare nim: string | null
+  declare nip: string | null
 
   @column()
   declare name: string | null
@@ -28,7 +29,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   @column()
-  declare major: string | null
+  declare subject: string | null
 
   @column()
   declare status: number | null
@@ -36,17 +37,20 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime()
   declare dateOfAcceptance: DateTime | null
 
-  @column()
-  declare profile: string | null
-
   @hasOne(() => UserDatum)
   declare userData: HasOne<typeof UserDatum>
+
+  @hasOne(() => Role)
+  declare role: HasOne<typeof Role>
+
+  @column()
+  declare profile: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
+  declare updatedAt: DateTime
 
   @column.dateTime()
   declare deletedAt: DateTime | null
