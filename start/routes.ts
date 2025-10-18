@@ -91,30 +91,33 @@ router
     })
   )
 
-  // API Routes
-router.group(() => {
-  // Attendances CRUD
-  router.get('/attendances', [AttendancesController, 'index'])
-  router.post('/attendances', [AttendancesController, 'store'])
-  router.get('/attendances/:id', [AttendancesController, 'show'])
-  router.put('/attendances/:id', [AttendancesController, 'update'])
-  router.delete('/attendances/:id', [AttendancesController, 'destroy'])
+// API Routes
+router
+  .group(() => {
+    // Attendances CRUD
+    router.get('/attendances', [AttendancesController, 'index'])
+    router.post('/attendances', [AttendancesController, 'store'])
+    router.get('/attendances/:id', [AttendancesController, 'show'])
+    router.put('/attendances/:id', [AttendancesController, 'update'])
+    router.delete('/attendances/:id', [AttendancesController, 'destroy'])
 
-  // Permits CRUD
-  router.get('/permits', [PermitsController, 'index'])
-  router.post('/permits', [PermitsController, 'store'])
-  router.get('/permits/:id', [PermitsController, 'show'])
-  router.put('/permits/:id', [PermitsController, 'update'])
-  router.delete('/permits/:id', [PermitsController, 'destroy'])
+    // Permits CRUD
+    router.get('/permits', [PermitsController, 'index'])
+    router.post('/permits', [PermitsController, 'store'])
+    router.get('/permits/:id', [PermitsController, 'show'])
+    router.put('/permits/:id', [PermitsController, 'update'])
+    router.delete('/permits/:id', [PermitsController, 'destroy'])
 
-  // Logs (Read-only - logs are created automatically by system)
-  router.get('/logs', [LogsController, 'index'])
-  router.get('/logs/:id', [LogsController, 'show'])
+    // Logs (Read-only - logs are created automatically by system)
+    router.get('/logs', [LogsController, 'index'])
+    router.get('/logs/:id', [LogsController, 'show'])
 
-  // Notifications CRUD
-  router.get('/notifications', [NotificationsController, 'index'])
-  router.post('/notifications', [NotificationsController, 'store'])
-  router.get('/notifications/:id', [NotificationsController, 'show'])
-  router.put('/notifications/:id', [NotificationsController, 'update'])
-  router.delete('/notifications/:id', [NotificationsController, 'destroy'])
-}).prefix('/api').use(middleware.auth({ guards: ['web'] }))
+    // Notifications CRUD
+    router.get('/notifications', [NotificationsController, 'index'])
+    router.post('/notifications', [NotificationsController, 'store'])
+    router.get('/notifications/:id', [NotificationsController, 'show'])
+    router.put('/notifications/:id', [NotificationsController, 'update'])
+    router.delete('/notifications/:id', [NotificationsController, 'destroy'])
+  })
+  .prefix('/api')
+  .use(middleware.auth({ guards: ['web'] }))
