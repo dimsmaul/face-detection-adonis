@@ -34,13 +34,12 @@ export default function SignIn() {
   //   })
 
   function onSubmit(values: Infer<typeof formSchema>) {
-    Inertia.post('/', { ...values })
-    // mutation.mutate(values)
+    Inertia.post('/sign-in', { ...values })
   }
 
   return (
     <div className="flex justify-center items-center h-screen w-screen overflow-hidden">
-      <Head title='Sign In' />
+      <Head title="Sign In" />
       <img src="/img/auth.jpg" alt="" className="w-1/2 object-cover grayscale h-screen" />
       <div className="w-1/2 p-20">
         <h1 className="text-5xl font-bold mb-8">Sign In</h1>
@@ -105,19 +104,9 @@ export default function SignIn() {
   )
 }
 
-// const SignInRequest = (body: z.infer<typeof formSchema>) => {
-//   const data = unauth.post('/auth/sign-in', body)
-//   return data
-// }
-
 const formSchema = vine.compile(
   vine.object({
     email: vine.string().email(),
     password: vine.string().minLength(8),
   })
 )
-
-// const formSchema = z.object({
-//   email: z.email("Invalid email address"),
-//   password: z.string().min(8, "Password must be at least 8 characters"),
-// });

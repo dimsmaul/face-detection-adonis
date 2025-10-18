@@ -5,8 +5,8 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').notNullable()
-      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.uuid('id').notNullable().primary()
+      table.uuid('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.date('date').notNullable()
       table.time('time').notNullable()
       table.string('note').nullable()

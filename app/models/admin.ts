@@ -1,11 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import UserDatum from './user_datum.js'
-import type { HasOne } from '@adonisjs/lucid/types/relations'
-import Role from './role.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { v4 as uuidv4 } from 'uuid'
+import Position from './position.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -14,7 +15,7 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 
 export default class Admin extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column()
   declare nip: string | null
@@ -34,14 +35,14 @@ export default class Admin extends compose(BaseModel, AuthFinder) {
   @column()
   declare status: number | null
 
-  @column.dateTime()
-  declare dateOfAcceptance: DateTime | null
+  // @column.dateTime()
+  // declare dateOfAcceptance: DateTime | null
 
-  @hasOne(() => UserDatum)
-  declare userData: HasOne<typeof UserDatum>
+  @belongsTo(() => UserDatum)
+  declare userData: BelongsTo<typeof UserDatum>
 
-  @hasOne(() => Role)
-  declare role: HasOne<typeof Role>
+  @belongsTo(() => Position)
+  declare position: BelongsTo<typeof Position>
 
   @column()
   declare profile: string | null
@@ -54,4 +55,9 @@ export default class Admin extends compose(BaseModel, AuthFinder) {
 
   @column.dateTime()
   declare deletedAt: DateTime | null
+
+  @beforeCreate()
+  static assignUuid(data: Admin) {
+    data.id = uuidv4()
+  }
 }

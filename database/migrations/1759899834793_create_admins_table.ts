@@ -16,7 +16,12 @@ export default class extends BaseSchema {
       table.integer('status').nullable()
       table.string('profile').nullable()
 
-      table.uuid('role_id').nullable().references('id').inTable('roles').onDelete('SET NULL')
+      table
+        .uuid('position_id')
+        .nullable()
+        .references('id')
+        .inTable('positions')
+        .onDelete('SET NULL')
       table
         .uuid('user_data_id')
         .nullable()

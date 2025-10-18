@@ -74,6 +74,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.1.14",
     "@vinejs/vine": "^3.0.1",
+    "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "edge.js": "^6.2.1",
@@ -86,6 +87,7 @@
     "reflect-metadata": "^0.2.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.14",
+    "uuid": "^13.0.0",
     "zod": "^4.1.12"
   },
   "hotHook": {

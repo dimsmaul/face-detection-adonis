@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import User from './user.js'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Admin from './admin.js'
+import { v4 as uuidv4 } from 'uuid'
 
 export default class UserDatum extends BaseModel {
   @column({ isPrimary: true })
@@ -29,15 +30,20 @@ export default class UserDatum extends BaseModel {
   @column()
   declare postalCode: string | null
 
-  @hasMany(() => User)
-  declare users: HasMany<typeof User>
+  @belongsTo(() => User)
+  declare users: BelongsTo<typeof User>
 
-  @hasMany(() => Admin)
-  declare admins: HasMany<typeof Admin>
+  @belongsTo(() => Admin)
+  declare admins: BelongsTo<typeof Admin>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @beforeCreate()
+  static assignUuid(data: UserDatum) {
+    data.id = uuidv4()
+  }
 }

@@ -5,26 +5,23 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class SessionController {
   async store({ request, auth, response }: HttpContext) {
     const { email, password } = request.only(['email', 'password'])
+
     try {
-      const user = await User.verifyCredentials(email, password)
-      const admin = await Admin.verifyCredentials(email, password)
-
-      if (!user && !admin) {
-        throw new Error('Invalid credentials')
-      }
-
-      if (admin) {
+      try {
+        const admin = await Admin.verifyCredentials(email, password)
         await auth.use('admin').login(admin)
+        console.log('Admin logged in')
         return response.redirect().toPath('/admin/dashboard')
-      } else {
+      } catch {
+        // Jika gagal, lanjut coba sebagai user
+        const user = await User.verifyCredentials(email, password)
         await auth.use('web').login(user)
+        console.log('User logged in')
         return response.redirect().toPath('/dashboard')
       }
-
-      // await auth.use('web').login(user)
-      // response.redirect().toPath('/dashboard')
     } catch (error) {
-      response.redirect().back()
+      console.log('Login failed:', error.message)
+      return response.redirect().back()
     }
   }
 

@@ -26,7 +26,7 @@ export default class AttendancesController {
   async store({ request, response }: HttpContext) {
     const validator = vine.compile(
       vine.object({
-        userId: vine.number(),
+        userId: vine.string().uuid(),
         date: vine.string(),
         time: vine.string(),
         note: vine.string().optional(),
@@ -36,7 +36,7 @@ export default class AttendancesController {
     const payload = await request.validateUsing(validator)
     const attendance = await Attendance.create({
       ...payload,
-      date: DateTime.fromISO(payload.date)
+      date: DateTime.fromISO(payload.date),
     })
 
     // Log the attendance creation
@@ -56,10 +56,7 @@ export default class AttendancesController {
    * Show individual attendance
    */
   async show({ params, response }: HttpContext) {
-    const attendance = await Attendance.query()
-      .where('id', params.id)
-      .preload('user')
-      .firstOrFail()
+    const attendance = await Attendance.query().where('id', params.id).preload('user').firstOrFail()
 
     return response.json(attendance)
   }
@@ -72,7 +69,7 @@ export default class AttendancesController {
 
     const validator = vine.compile(
       vine.object({
-        userId: vine.number().optional(),
+        userId: vine.string().uuid().optional(),
         date: vine.string().optional(),
         time: vine.string().optional(),
         note: vine.string().optional(),
@@ -106,7 +103,7 @@ export default class AttendancesController {
   async destroy({ params, response }: HttpContext) {
     const attendance = await Attendance.findOrFail(params.id)
     const userId = attendance.userId
-    
+
     await attendance.delete()
 
     // Log the attendance deletion

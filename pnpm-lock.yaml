@@ -65,6 +65,9 @@ importers:
       '@vinejs/vine':
         specifier: ^3.0.1
         version: 3.0.1
+      axios:
+        specifier: ^1.12.2
+        version: 1.12.2
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -101,6 +104,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.14
         version: 4.1.14
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
       zod:
         specifier: ^4.1.12
         version: 4.1.12
@@ -3662,6 +3668,10 @@ packages:
       '@types/react':
         optional: true
 
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
+    hasBin: true
+
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
@@ -7114,6 +7124,8 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.2.2
+
+  uuid@13.0.0: {}
 
   v8-compile-cache-lib@3.0.1: {}
 

@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import Notification from '#models/notification'
 import Log from '#models/log'
 import vine from '@vinejs/vine'
-import LoggingService from '#services/logging_service'
+// import LoggingService from '#services/logging_service'
 
 export default class NotificationsController {
   /**

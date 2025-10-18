@@ -1,14 +1,15 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, beforeCreate } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
+import { v4 as uuidv4 } from 'uuid'
 
 export default class Permit extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column()
-  declare userId: number
+  declare userId: string
 
   @column.date()
   declare date: DateTime
@@ -30,4 +31,9 @@ export default class Permit extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @beforeCreate()
+  static assignUuid(data: Permit) {
+    data.id = uuidv4()
+  }
 }

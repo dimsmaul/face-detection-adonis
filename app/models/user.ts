@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasOne, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasOne, hasMany, beforeCreate } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import UserDatum from './user_datum.js'
 import type { HasOne, HasMany } from '@adonisjs/lucid/types/relations'
+import { v4 as uuidv4 } from 'uuid'
 // import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 // import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 // import type { HasMany } from '@adonisjs/lucid/types/relations'
@@ -60,4 +61,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => import('./permit.js').then((m) => m.default))
   declare permits: HasMany<typeof import('./permit.js').default>
+
+  @beforeCreate()
+  static assignUuid(user: User) {
+    user.id = uuidv4()
+  }
 }

@@ -13,12 +13,12 @@ Content-Type: {{contentType}}
 }
 
 ### Login user
-POST {{baseUrl}}/
+POST {{baseUrl}}/sign-in
 Content-Type: {{contentType}}
 
 {
-  "email": "john.doe@example.com",
-  "password": "password123"
+  "email": "user@gmail.com",
+  "password": "password"
 }
 
 ### Register another user for testing
