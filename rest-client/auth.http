@@ -1,0 +1,44 @@
+### Variables
+@baseUrl = http://localhost:3333
+@contentType = application/json
+
+### Register new user
+POST {{baseUrl}}/sign-up
+Content-Type: {{contentType}}
+
+{
+  "fullName": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+### Login user
+POST {{baseUrl}}/
+Content-Type: {{contentType}}
+
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+### Register another user for testing
+POST {{baseUrl}}/sign-up
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "password": "password123"
+}
+
+### Login as Jane
+POST {{baseUrl}}/
+Content-Type: {{contentType}}
+
+{
+  "email": "jane.smith@example.com",
+  "password": "password123"
+}
+
+### Access Dashboard (requires authentication)
+GET {{baseUrl}}/dashboard

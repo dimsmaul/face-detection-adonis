@@ -1,0 +1,30 @@
+### Variables
+@baseUrl = http://localhost:3333/api
+@contentType = application/json
+
+### Get all logs (with pagination)
+# Logs are automatically created by the system when actions are performed
+GET {{baseUrl}}/logs
+
+### Get logs with custom pagination
+GET {{baseUrl}}/logs?page=1&limit=5
+
+### Get specific log by ID
+GET {{baseUrl}}/logs/1
+
+### NOTE: Logs are automatically created by the system
+### When you perform actions on attendances, permits, or notifications,
+### corresponding logs will be created automatically with:
+### - title: table name (attendances, permits, notifications)
+### - note: action format like "1.create_attendance", "2.request_permit"
+
+### Examples of automatic log creation:
+### 1. Creating attendance -> logs.title = "attendances", logs.note = "1.create_attendance"
+### 2. Requesting permit -> logs.title = "permits", logs.note = "1.request_permit"
+### 3. Creating notification -> logs.title = "notifications", logs.note = "1.create_notification"
+
+### To see logs being created automatically:
+### 1. Create an attendance record using attendances.http
+### 2. Check logs here to see the automatic log entry
+### 3. Create a permit using permits.http
+### 4. Check logs again to see the new permit log entry
