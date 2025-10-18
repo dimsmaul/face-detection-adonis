@@ -19,36 +19,22 @@ export default function SignUp() {
   const form = useForm<Infer<typeof formSchema>>({
     resolver: vineResolver(formSchema),
     defaultValues: {
-      full_name: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: '',
     },
   })
 
-  //   const mutation = useMutation({
-  //     mutationFn: (data: z.infer<typeof formSchema>) => SignUpRequest(data),
-  //     onSuccess: () => {
-  //       callAlert({
-  //         title: 'Success',
-  //         message: 'Sign up successful',
-  //         type: 'success',
-  //         onConfirm: () => router.push('/'),
-  //       })
-  //       form.reset()
-  //     },
-  //   })
-
   function onSubmit(values: Infer<typeof formSchema>) {
-    // mutation.mutate(values)
-    Inertia.post('/sign-up', { ...values, fullName: values.full_name })
+    Inertia.post('/sign-up', { ...values, name: values.name })
   }
 
   return (
     <div className="flex justify-center items-center h-screen w-screen overflow-hidden">
       <Head title="Sign Up" />
 
-      <img src="/assets/img/auth.jpg" alt="" className="w-1/2" />
+      <img src="/img/auth.jpg" alt="" className="w-1/2 object-cover grayscale h-screen" />
       <div className="w-1/2 p-20">
         <h1 className="text-5xl font-bold mb-8">Sign Up</h1>
 
@@ -57,7 +43,7 @@ export default function SignUp() {
             <div className="flex flex-col gap-5">
               <FormField
                 control={form.control}
-                name="full_name"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -132,7 +118,7 @@ export default function SignUp() {
 // }
 const formSchema = vine.compile(
   vine.object({
-    full_name: vine.string().minLength(2),
+    name: vine.string().minLength(2),
     email: vine.string().email(),
     password: vine.string().minLength(8),
     confirmPassword: vine.string().minLength(8).sameAs('password'),

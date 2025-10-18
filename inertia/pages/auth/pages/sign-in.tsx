@@ -41,7 +41,7 @@ export default function SignIn() {
   return (
     <div className="flex justify-center items-center h-screen w-screen overflow-hidden">
       <Head title='Sign In' />
-      <img src="/assets/img/auth.jpg" alt="" className="w-1/2" />
+      <img src="/img/auth.jpg" alt="" className="w-1/2 object-cover grayscale h-screen" />
       <div className="w-1/2 p-20">
         <h1 className="text-5xl font-bold mb-8">Sign In</h1>
 

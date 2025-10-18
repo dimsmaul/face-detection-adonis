@@ -21,6 +21,12 @@ export default class GuestMiddleware {
     options: { guards?: (keyof Authenticators)[] } = {}
   ) {
     for (let guard of options.guards || [ctx.auth.defaultGuard]) {
+      // check guard if admin, direct to /admin/dashboard
+      if ((await ctx.auth.use(guard).check()) && guard === 'admin') {
+        // this.redirectTo = '/admin/dashboard'
+        return ctx.response.redirect('/admin/dashboard', true)
+      }
+
       if (await ctx.auth.use(guard).check()) {
         return ctx.response.redirect(this.redirectTo, true)
       }

@@ -10,6 +10,7 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 const SessionController = () => import('#controllers/session_controller')
+const TeacherStaffsController = () => import('#controllers/teacher_staffs_controller')
 
 // NOTE: Auth
 // Sign In
@@ -25,6 +26,60 @@ router
   .on('/dashboard')
   .renderInertia('dashboard/pages/dashboard')
   .as('dashboard')
+  .use(
+    middleware.auth({
+      guards: ['web'],
+    })
+  )
+
+// Admin Dashboard
+router
+  .on('/admin/dashboard')
+  .renderInertia('admin/dashboard/pages/index')
+  .as('admin.dashboard')
+  .use(
+    middleware.auth({
+      guards: ['web', 'admin'],
+    })
+  )
+
+/**
+ * @Feat Admin Teacher & Staff Management
+ */
+// view
+router
+  .on('/admin/teachers-staff')
+  .renderInertia('admin/teacher-staff/pages/index')
+  .as('admin.teacher-staff')
+  .use(
+    middleware.auth({
+      guards: ['web'],
+    })
+  )
+
+// api
+
+router
+  .get('/admin/teachers-staff', [TeacherStaffsController, 'index'])
+  .as('admin.teacher-staff.index')
+  .use(
+    middleware.auth({
+      guards: ['web'],
+    })
+  )
+
+router
+  .post('/admin/teachers-staff', [TeacherStaffsController, 'create'])
+  .as('admin.teacher-staff.create')
+  .use(
+    middleware.auth({
+      guards: ['web'],
+    })
+  )
+
+router
+  .get('/admin/teachers-staff/:id', [TeacherStaffsController, 'show'])
+  .as('admin.teacher-staff.show')
   .use(
     middleware.auth({
       guards: ['web'],
