@@ -1,0 +1,175 @@
+### Complete API Test Workflow
+### This file demonstrates a complete testing workflow for all APIs
+
+### Variables
+@baseUrl = http://localhost:3333
+@apiUrl = http://localhost:3333/api
+@contentType = application/json
+
+### ========================================
+### STEP 1: Authentication Setup
+### ========================================
+
+### Register first user
+POST {{baseUrl}}/sign-up
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Test User One",
+  "email": "test1@example.com",
+  "password": "password123"
+}
+
+### Register second user
+POST {{baseUrl}}/sign-up
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Test User Two", 
+  "email": "test2@example.com",
+  "password": "password123"
+}
+
+### Login as first user
+POST {{baseUrl}}/
+Content-Type: {{contentType}}
+
+{
+  "email": "test1@example.com",
+  "password": "password123"
+}
+
+### ========================================
+### STEP 2: Create Test Data
+### ========================================
+
+### Create attendance records
+POST {{apiUrl}}/attendances
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "date": "2024-01-15",
+  "time": "08:30:00",
+  "note": "Morning attendance"
+}
+
+### Create permit request
+POST {{apiUrl}}/permits
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "date": "2024-01-20",
+  "time": "14:00:00",
+  "note": "Medical appointment",
+  "attachment": "medical_cert.pdf"
+}
+
+### NOTE: Logs are created automatically - no manual creation needed
+
+### Create notification
+POST {{apiUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "message": "Welcome to the attendance system!",
+  "nim": "12345678"
+}
+
+### ========================================
+### STEP 3: Read Operations
+### ========================================
+
+### Get all attendances
+GET {{apiUrl}}/attendances
+
+### Get all permits
+GET {{apiUrl}}/permits
+
+### Get all logs
+GET {{apiUrl}}/logs
+
+### Get all notifications
+GET {{apiUrl}}/notifications
+
+### ========================================
+### STEP 4: Update Operations
+### ========================================
+
+### Update attendance
+PUT {{apiUrl}}/attendances/1
+Content-Type: {{contentType}}
+
+{
+  "note": "Updated: Morning attendance confirmed"
+}
+
+### Update permit
+PUT {{apiUrl}}/permits/1
+Content-Type: {{contentType}}
+
+{
+  "note": "Updated: Medical appointment with specialist"
+}
+
+### Check automatically created logs
+GET {{apiUrl}}/logs
+
+### Update notification
+PUT {{apiUrl}}/notifications/1
+Content-Type: {{contentType}}
+
+{
+  "message": "Updated: Welcome to the attendance system! Please complete your profile."
+}
+
+### ========================================
+### STEP 5: Individual Record Retrieval
+### ========================================
+
+### Get specific records
+GET {{apiUrl}}/attendances/1
+GET {{apiUrl}}/permits/1
+GET {{apiUrl}}/notifications/1
+
+### Check logs created by previous actions
+GET {{apiUrl}}/logs
+
+### ========================================
+### STEP 6: Pagination Testing
+### ========================================
+
+### Test pagination on all endpoints
+GET {{apiUrl}}/attendances?page=1&limit=2
+GET {{apiUrl}}/permits?page=1&limit=2
+GET {{apiUrl}}/logs?page=1&limit=2
+GET {{apiUrl}}/notifications?page=1&limit=2
+
+### ========================================
+### STEP 7: Error Testing
+### ========================================
+
+### Test invalid data (should return validation errors)
+POST {{apiUrl}}/attendances
+Content-Type: {{contentType}}
+
+{
+  "userId": "invalid",
+  "date": "invalid-date"
+}
+
+### Test non-existent record
+GET {{apiUrl}}/attendances/999
+
+### ========================================
+### STEP 8: Cleanup (Delete Operations)
+### ========================================
+
+### Delete records (uncomment to test - will create delete logs automatically)
+# DELETE {{apiUrl}}/attendances/1
+# DELETE {{apiUrl}}/permits/1
+# DELETE {{apiUrl}}/notifications/1
+
+### Check logs after deletions
+# GET {{apiUrl}}/logs

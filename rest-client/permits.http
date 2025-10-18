@@ -1,0 +1,79 @@
+### Variables
+@baseUrl = http://localhost:3333/api
+@contentType = application/json
+
+### Get all permits (with pagination)
+GET {{baseUrl}}/permits
+
+### Get permits with custom pagination
+GET {{baseUrl}}/permits?page=1&limit=3
+
+### Create new permit record
+POST {{baseUrl}}/permits
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "date": "2024-01-20",
+  "time": "14:00:00",
+  "note": "Medical appointment",
+  "attachment": "medical_certificate.pdf"
+}
+
+### Create permit without attachment
+POST {{baseUrl}}/permits
+Content-Type: {{contentType}}
+
+{
+  "userId": 2,
+  "date": "2024-01-21",
+  "time": "10:30:00",
+  "note": "Family emergency"
+}
+
+### Create permit with attachment
+POST {{baseUrl}}/permits
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "date": "2024-01-22",
+  "time": "13:00:00",
+  "note": "Academic conference",
+  "attachment": "conference_invitation.pdf"
+}
+
+### Get specific permit by ID
+GET {{baseUrl}}/permits/1
+
+### Update permit record
+PUT {{baseUrl}}/permits/1
+Content-Type: {{contentType}}
+
+{
+  "note": "Updated: Medical appointment - specialist consultation",
+  "attachment": "updated_medical_certificate.pdf"
+}
+
+### Partial update permit
+PUT {{baseUrl}}/permits/2
+Content-Type: {{contentType}}
+
+{
+  "attachment": "emergency_documentation.pdf"
+}
+
+### Update permit time
+PUT {{baseUrl}}/permits/3
+Content-Type: {{contentType}}
+
+{
+  "time": "12:30:00",
+  "note": "Conference time updated"
+}
+
+### Delete permit record
+DELETE {{baseUrl}}/permits/1
+
+### Try to get deleted permit (should return 404)
+GET {{baseUrl}}/permits/1

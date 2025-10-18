@@ -1,0 +1,68 @@
+### Variables
+@baseUrl = http://localhost:3333/api
+@contentType = application/json
+
+### Get all attendances (with pagination)
+GET {{baseUrl}}/attendances
+
+### Get attendances with custom pagination
+GET {{baseUrl}}/attendances?page=1&limit=5
+
+### Create new attendance record
+POST {{baseUrl}}/attendances
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "date": "2024-01-15",
+  "time": "08:30:00",
+  "note": "On time arrival"
+}
+
+### Create attendance for another user
+POST {{baseUrl}}/attendances
+Content-Type: {{contentType}}
+
+{
+  "userId": 2,
+  "date": "2024-01-15",
+  "time": "09:15:00",
+  "note": "Late arrival"
+}
+
+### Create attendance with early arrival
+POST {{baseUrl}}/attendances
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "date": "2024-01-16",
+  "time": "08:00:00",
+  "note": "Early arrival"
+}
+
+### Get specific attendance by ID
+GET {{baseUrl}}/attendances/1
+
+### Update attendance record
+PUT {{baseUrl}}/attendances/1
+Content-Type: {{contentType}}
+
+{
+  "note": "Updated: On time arrival - confirmed"
+}
+
+### Partial update attendance
+PUT {{baseUrl}}/attendances/2
+Content-Type: {{contentType}}
+
+{
+  "time": "09:00:00",
+  "note": "Time corrected"
+}
+
+### Delete attendance record
+DELETE {{baseUrl}}/attendances/1
+
+### Try to get deleted attendance (should return 404)
+GET {{baseUrl}}/attendances/1

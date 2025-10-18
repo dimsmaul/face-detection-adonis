@@ -1,0 +1,94 @@
+### Variables
+@baseUrl = http://localhost:3333/api
+@contentType = application/json
+
+### Get all notifications (with pagination)
+GET {{baseUrl}}/notifications
+
+### Get notifications with custom pagination
+GET {{baseUrl}}/notifications?page=1&limit=5
+
+### Create notification for specific user
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "message": "Your attendance has been recorded successfully",
+  "nim": "12345678"
+}
+
+### Create notification for another user
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "message": "Your permit request has been approved",
+  "nim": "87654321"
+}
+
+### Create reminder notification
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "message": "Reminder: Please submit your attendance before 5 PM",
+  "nim": "12345678"
+}
+
+### Create notification without NIM (general notification)
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "message": "System maintenance scheduled for tonight 11 PM - 2 AM"
+}
+
+### Create urgent notification
+POST {{baseUrl}}/notifications
+Content-Type: {{contentType}}
+
+{
+  "message": "URGENT: Please evacuate the building immediately"
+}
+
+### Get specific notification by ID
+GET {{baseUrl}}/notifications/1
+
+### Update notification message
+PUT {{baseUrl}}/notifications/1
+Content-Type: {{contentType}}
+
+{
+  "message": "Updated: Your attendance has been recorded successfully"
+}
+
+### Update notification message
+PUT {{baseUrl}}/notifications/2
+Content-Type: {{contentType}}
+
+{
+  "message": "Your permit request has been approved - check your email for details"
+}
+
+### Partial update notification
+PUT {{baseUrl}}/notifications/3
+Content-Type: {{contentType}}
+
+{
+  "message": "Reminder: Please submit your attendance before 4:30 PM (updated deadline)"
+}
+
+### Update notification NIM
+PUT {{baseUrl}}/notifications/4
+Content-Type: {{contentType}}
+
+{
+  "nim": "99999999",
+  "message": "System maintenance rescheduled to tomorrow 11 PM - 2 AM"
+}
+
+### Delete notification
+DELETE {{baseUrl}}/notifications/1
+
+### Try to get deleted notification (should return 404)
+GET {{baseUrl}}/notifications/1
