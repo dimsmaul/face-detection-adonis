@@ -26,18 +26,18 @@ POST {{baseUrl}}/sign-up
 Content-Type: {{contentType}}
 
 {
-  "fullName": "Jane Smith",
-  "email": "jane.smith@example.com",
-  "password": "password123"
+  "fullName": "Mahasiswa",
+  "email": "mahasiswa@gmail.com",
+  "password": "password"
 }
 
-### Login as Jane
-POST {{baseUrl}}/
+### Login as Mahasiswa
+POST {{baseUrl}}/sign-in
 Content-Type: {{contentType}}
 
 {
-  "email": "jane.smith@example.com",
-  "password": "password123"
+  "email": "mahasiswa@gmail.com",
+  "password": "password"
 }
 
 ### Access Dashboard (requires authentication)

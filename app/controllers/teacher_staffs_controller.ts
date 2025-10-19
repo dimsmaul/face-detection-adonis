@@ -3,7 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import vine from '@vinejs/vine'
 
 export default class TeacherStaffsController {
-  async index({ request, response, inertia }: HttpContext) {
+  async index({ request, response }: HttpContext) {
     const { page = 1, limit = 10, search = '' } = request.qs()
 
     try {
@@ -14,17 +14,17 @@ export default class TeacherStaffsController {
         .orderBy('created_at', 'desc')
         .paginate(page, limit)
 
-      // return response.ok({
-      //   message: 'Teacher staffs fetched successfully',
-      //   data: teacherStaffs,
-      // })
-
-      return inertia.render('admin/teacher-staff/pages/index', {
-        teacherStaffs,
-        search,
-        page,
-        limit,
+      return response.ok({
+        message: 'Teacher staffs fetched successfully',
+        data: teacherStaffs,
       })
+
+      // return inertia.render('admin/teacher-staff/pages/index', {
+      //   teacherStaffs,
+      //   search,
+      //   page,
+      //   limit,
+      // })
     } catch (error) {
       response.unauthorized('You are not authorized to access this resource')
     }

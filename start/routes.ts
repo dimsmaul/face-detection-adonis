@@ -9,12 +9,12 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
-import UsersController from '#controllers/users_controller'
-import PositionsController from '#controllers/positions_controller'
-import UserDataController from '#controllers/user_data_controller'
 
 const SessionController = () => import('#controllers/session_controller')
 const TeacherStaffsController = () => import('#controllers/teacher_staffs_controller')
+const UsersController = () => import('#controllers/users_controller')
+const PositionsController = () => import('#controllers/positions_controller')
+const UserDataController = () => import('#controllers/user_data_controller')
 const AttendancesController = () => import('#controllers/attendances_controller')
 const PermitsController = () => import('#controllers/permits_controller')
 const LogsController = () => import('#controllers/logs_controller')
@@ -40,49 +40,24 @@ router
     })
   )
 
-// Admin Dashboard
 router
-  .on('/admin/dashboard')
-  .renderInertia('admin/dashboard/pages/index')
-  .as('admin.dashboard')
-  .use(
-    middleware.auth({
-      guards: ['web', 'admin'],
-    })
-  )
+  .group(() => {
+    router.on('/dashboard').renderInertia('admin/dashboard/pages/index').as('admin.dashboard')
 
-/**
- * @Feat Admin Teacher & Staff Management
- */
-// view
-router.get('/admin/teachers-staff', [TeacherStaffsController, 'index']).use(
-  middleware.auth({
-    guards: ['web', 'admin'],
+    /**
+     * @Feat Admin Teacher & Staff Management
+     */
+    router
+      .on('/teachers-staff/')
+      .renderInertia('admin/teacher-staff/pages/index')
+      .as('admin.teacher-staff')
+    // router
+    //   .on('/teachers-staff/')
+    //   .renderInertia('admin/teacher-staff/pages/index')
+    //   .as('admin.teacher-staff')
   })
-)
-// router
-//   .on('/admin/teachers-staff/')
-//   .renderInertia('admin/teacher-staff/pages/index')
-//   .as('admin.teacher-staff')
-//   .use(
-//     middleware.auth({
-//       guards: ['web', 'admin'],
-//     })
-//   )
-
-// api
-
-// router
-//   .group(() => {
-//     // Teacher & Staff CRUD
-//     router.get('/admin/teachers-staff', [TeacherStaffsController, 'index'])
-//     router.post('/admin/teachers-staff', [TeacherStaffsController, 'store'])
-//     router.get('/admin/teachers-staff/:id', [TeacherStaffsController, 'show'])
-//     router.put('/admin/teachers-staff/:id', [TeacherStaffsController, 'update'])
-//     router.delete('/admin/teachers-staff/:id', [TeacherStaffsController, 'destroy'])
-//   })
-//   .prefix('/api')
-// // .use(middleware.auth({ guards: ['web'] }))
+  .prefix('/admin')
+  .use(middleware.admin())
 
 // API Routes
 router
@@ -95,11 +70,11 @@ router
     router.delete('/users/:id', [UsersController, 'destroy'])
 
     // Admin CRUD
-    router.get('/admin/teachers-staff', [TeacherStaffsController, 'index'])
-    router.post('/admin/teachers-staff', [TeacherStaffsController, 'store'])
-    router.get('/admin/teachers-staff/:id', [TeacherStaffsController, 'show'])
-    router.put('/admin/teachers-staff/:id', [TeacherStaffsController, 'update'])
-    router.delete('/admin/teachers-staff/:id', [TeacherStaffsController, 'destroy'])
+    router.get('/admin', [TeacherStaffsController, 'index'])
+    router.post('/admin', [TeacherStaffsController, 'store'])
+    router.get('/admin/:id', [TeacherStaffsController, 'show'])
+    router.put('/admin/:id', [TeacherStaffsController, 'update'])
+    router.delete('/admin/:id', [TeacherStaffsController, 'destroy'])
 
     // Position
     router.get('/positions', [PositionsController, 'index'])
@@ -138,4 +113,6 @@ router
     router.delete('/notifications/:id', [NotificationsController, 'destroy'])
   })
   .prefix('/api')
-// .use(middleware.auth({ guards: ['web'] }))
+  // .middleware(['auth:admin'])
+  .use(middleware.auth({ guards: ['web', 'admin'] }))
+// .use(middleware.admin())

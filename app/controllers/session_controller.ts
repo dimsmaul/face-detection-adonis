@@ -10,13 +10,13 @@ export default class SessionController {
       try {
         const admin = await Admin.verifyCredentials(email, password)
         await auth.use('admin').login(admin)
-        console.log('Admin logged in')
+        // console.log('Admin logged in')
         return response.redirect().toPath('/admin/dashboard')
       } catch {
         // Jika gagal, lanjut coba sebagai user
         const user = await User.verifyCredentials(email, password)
         await auth.use('web').login(user)
-        console.log('User logged in')
+        // console.log('User logged in')
         return response.redirect().toPath('/dashboard')
       }
     } catch (error) {
