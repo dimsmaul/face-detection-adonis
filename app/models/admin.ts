@@ -17,6 +17,12 @@ export default class Admin extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
   declare id: string
 
+  @column({ columnName: 'user_data_id' })
+  declare userDataId: string | null
+
+  @column()
+  declare positionId: string | null
+
   @column()
   declare nip: string | null
 
@@ -38,7 +44,7 @@ export default class Admin extends compose(BaseModel, AuthFinder) {
   // @column.dateTime()
   // declare dateOfAcceptance: DateTime | null
 
-  @belongsTo(() => UserDatum)
+  @belongsTo(() => UserDatum, { foreignKey: 'userDataId' })
   declare userData: BelongsTo<typeof UserDatum>
 
   @belongsTo(() => Position)

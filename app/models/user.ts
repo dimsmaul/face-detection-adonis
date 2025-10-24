@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasOne, hasMany, beforeCreate } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, beforeCreate, belongsTo } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import UserDatum from './user_datum.js'
-import type { HasOne, HasMany } from '@adonisjs/lucid/types/relations'
+import type { HasMany, BelongsTo } from '@adonisjs/lucid/types/relations'
 import { v4 as uuidv4 } from 'uuid'
 // import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 // import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
@@ -18,6 +18,9 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
   declare id: string
+
+  @column({ columnName: 'user_data_id' })
+  declare userDataId: string | null
 
   @column()
   declare nim: string | null
@@ -43,8 +46,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare profile: string | null
 
-  @hasOne(() => UserDatum)
-  declare userData: HasOne<typeof UserDatum>
+  @belongsTo(() => UserDatum, { foreignKey: 'userDataId' })
+  declare userData: BelongsTo<typeof UserDatum>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -18,7 +18,13 @@ export default class Attendance extends BaseModel {
   declare time: string
 
   @column()
+  declare timeOut: string | null
+
+  @column()
   declare note: string | null
+
+  @column()
+  declare status: number // 0: Pending, 1: Presence, 2: Leave, 3: Absent
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

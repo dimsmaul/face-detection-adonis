@@ -20,6 +20,14 @@ export default class AuthMiddleware {
     } = {}
   ) {
     await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+
+    // shared
+    ctx.inertia.share({
+      auth: {
+        user: ctx.auth.user ? ctx.auth.user.serialize() : null,
+      },
+    })
+
     return next()
   }
 }

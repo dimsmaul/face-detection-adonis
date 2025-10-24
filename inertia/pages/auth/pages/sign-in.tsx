@@ -26,13 +26,6 @@ export default function SignIn() {
     },
   })
 
-  //   const mutation = useMutation({
-  //     mutationFn: (data: z.infer<typeof formSchema>) => SignInRequest(data),
-  //     onSuccess: (data) => {
-  //       setUsers(data.data.data)
-  //     },
-  //   })
-
   function onSubmit(values: Infer<typeof formSchema>) {
     Inertia.post('/sign-in', { ...values })
   }

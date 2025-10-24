@@ -9,6 +9,7 @@ import {
   Command,
   Frame,
   GalleryVerticalEnd,
+  IdCard,
   LayoutDashboard,
   Map,
   Pen,
@@ -62,6 +63,11 @@ const data = {
       name: 'Teacher & Staff',
       url: '/admin/teachers-staff',
       icon: Users,
+    },
+    {
+      name: 'Position',
+      url: '/admin/positions',
+      icon: IdCard,
     },
   ],
 }

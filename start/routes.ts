@@ -11,7 +11,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 const SessionController = () => import('#controllers/session_controller')
-const TeacherStaffsController = () => import('#controllers/teacher_staffs_controller')
+const AdminsController = () => import('#controllers/admins_controller')
 const UsersController = () => import('#controllers/users_controller')
 const PositionsController = () => import('#controllers/positions_controller')
 const UserDataController = () => import('#controllers/user_data_controller')
@@ -20,8 +20,15 @@ const PermitsController = () => import('#controllers/permits_controller')
 const LogsController = () => import('#controllers/logs_controller')
 const NotificationsController = () => import('#controllers/notifications_controller')
 
-// NOTE: Auth
-// Sign In
+/**
+ * @Import Render View
+ */
+const AdminViewsController = () => import('#controllers/admin_views_controller')
+const UserViewsController = () => import('#controllers/user_views_controller')
+
+/**
+ * @Feat Authentication Routes
+ */
 router.on('/').renderInertia('auth/pages/sign-in').as('sign-in').use(middleware.guest())
 router.post('/sign-in', [SessionController, 'store']).as('sign-in.post')
 
@@ -29,16 +36,28 @@ router.post('/sign-in', [SessionController, 'store']).as('sign-in.post')
 router.on('/sign-up').renderInertia('auth/pages/sign-up').as('sign-up').use(middleware.guest())
 router.post('/sign-up', [SessionController, 'register']).as('sign-up.post')
 
-// Dashboard
+// Sign Out
 router
-  .on('/dashboard')
-  .renderInertia('dashboard/pages/dashboard')
-  .as('dashboard')
-  .use(
-    middleware.auth({
-      guards: ['web'],
-    })
-  )
+  .post('/sign-out', [SessionController, 'logout'])
+  .as('sign-out')
+  .use(middleware.auth({ guards: ['web', 'admin'] }))
+
+/**
+ * @Feat Dashboard User
+ */
+
+router
+  .group(() => {
+    router.get('/dashboard', [UserViewsController, 'dashboard'])
+    router.get('/attendance', [UserViewsController, 'attendance'])
+    router.get('/leave', [UserViewsController, 'leave'])
+    router.get('/logs', [UserViewsController, 'logs'])
+  })
+  .use(middleware.auth({ guards: ['web'] }))
+
+/**
+ * @Feat Dashboard Admin
+ */
 
 router
   .group(() => {
@@ -47,19 +66,30 @@ router
     /**
      * @Feat Admin Teacher & Staff Management
      */
-    router
-      .on('/teachers-staff/')
-      .renderInertia('admin/teacher-staff/pages/index')
-      .as('admin.teacher-staff')
-    // router
-    //   .on('/teachers-staff/')
-    //   .renderInertia('admin/teacher-staff/pages/index')
-    //   .as('admin.teacher-staff')
+    router.get('/teachers-staff', [AdminViewsController, 'list'])
+    router.get('/teachers-staff/action', [AdminViewsController, 'create'])
+
+    /**
+     * @Feat Admin Position Management
+     */
+    router.get('/positions', [AdminViewsController, 'positionList'])
+    router.get('/positions/action', [AdminViewsController, 'createPosition'])
+    router.get('/positions/action/:id', [AdminViewsController, 'editPosition'])
+    // router.get('/positions/action', [AdminViewsController, 'create'])
+
+    /**
+     * @Feat Admin Student Management
+     */
+    router.get('/students', [AdminViewsController, 'userList'])
+    router.get('/students/action', [AdminViewsController, 'createUser'])
+    router.get('/students/action/:id', [AdminViewsController, 'editUser'])
   })
   .prefix('/admin')
-  .use(middleware.admin())
+  .use(middleware.auth({ guards: ['admin'] }))
 
-// API Routes
+/**
+ * @Feat API Routes
+ */
 router
   .group(() => {
     // User CRUD
@@ -70,11 +100,11 @@ router
     router.delete('/users/:id', [UsersController, 'destroy'])
 
     // Admin CRUD
-    router.get('/admin', [TeacherStaffsController, 'index'])
-    router.post('/admin', [TeacherStaffsController, 'store'])
-    router.get('/admin/:id', [TeacherStaffsController, 'show'])
-    router.put('/admin/:id', [TeacherStaffsController, 'update'])
-    router.delete('/admin/:id', [TeacherStaffsController, 'destroy'])
+    router.get('/admin', [AdminsController, 'index'])
+    router.post('/admin', [AdminsController, 'store'])
+    router.get('/admin/:id', [AdminsController, 'show'])
+    router.put('/admin/:id', [AdminsController, 'update'])
+    router.delete('/admin/:id', [AdminsController, 'destroy'])
 
     // Position
     router.get('/positions', [PositionsController, 'index'])
@@ -113,6 +143,7 @@ router
     router.delete('/notifications/:id', [NotificationsController, 'destroy'])
   })
   .prefix('/api')
+  // .use(middleware.admin())
   // .middleware(['auth:admin'])
   .use(middleware.auth({ guards: ['web', 'admin'] }))
 // .use(middleware.admin())

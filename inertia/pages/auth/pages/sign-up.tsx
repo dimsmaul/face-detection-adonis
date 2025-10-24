@@ -94,7 +94,7 @@ export default function SignUp() {
                 )}
               />
               <Button type="submit" className="w-full">
-                Sign In
+                Sign Up
               </Button>
               <div>
                 <span className="text-sm">

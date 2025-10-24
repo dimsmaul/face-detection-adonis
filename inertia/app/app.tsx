@@ -7,6 +7,7 @@ import { createInertiaApp } from '@inertiajs/react'
 // import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import Dashboard from '~/layouts/dashboard'
 import NoLayouts from '~/layouts/no-layout'
+import UserDashboardLayout from '~/layouts/user'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
@@ -28,12 +29,13 @@ createInertiaApp({
       throw new Error(`Page not found: ${name}`)
     }
 
+
     // alert(name.startsWith('admin'));
     // Tentukan layout otomatis berdasarkan folder parent
     if (name.startsWith('admin')) {
       page.default.layout = (page: any) => <Dashboard>{page}</Dashboard>
-    } else if (name.startsWith('dashboard')) {
-      page.default.layout = (page: any) => <Dashboard>{page}</Dashboard>
+    } else if (name.startsWith('users')) {
+      page.default.layout = (page: any) => <UserDashboardLayout>{page}</UserDashboardLayout>
     } else {
       page.default.layout = (page: any) => <NoLayouts>{page}</NoLayouts>
     }

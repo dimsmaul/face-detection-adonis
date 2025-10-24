@@ -5,19 +5,15 @@ export default class PositionsController {
   async index({ request, response }: HttpContext) {
     const { page = 1, limit = 10, search = '' } = request.qs()
 
-    try {
-      const positions = await Position.query()
-        .where('name', 'like', `%${search}%`)
-        .orderBy('created_at', 'desc')
-        .paginate(page, limit)
+    const positions = await Position.query()
+      .where('name', 'like', `%${search}%`)
+      .orderBy('created_at', 'desc')
+      .paginate(page, limit)
 
-      return response.ok({
-        message: 'Positions fetched successfully',
-        data: positions,
-      })
-    } catch (error) {
-      response.unauthorized('You are not authorized to access this resource')
-    }
+    return response.ok({
+      message: 'Positions fetched successfully',
+      data: positions,
+    })
   }
 
   async show({ params, response }: HttpContext) {

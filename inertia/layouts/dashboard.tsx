@@ -10,9 +10,20 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { useEffect, useState } from 'react'
 import { AppSidebar } from '~/components/sidebars'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { router, usePage } from '@inertiajs/react'
+import { Avatar, AvatarFallback } from '~/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu'
+import { LogOut, User } from 'lucide-react'
+import NoLayouts from './no-layout'
 
 export default function Dashboard({ children }: { children: React.ReactNode }) {
+  const { auth } = usePage().props as any
+
   const location = window.location.pathname
 
   const [breadcrumbs, setBreadcrumbs] = useState<{ name: string; url: string }[]>([])
@@ -28,12 +39,16 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
     setBreadcrumbs(breadcrumbItems)
   }, [location])
 
+  const handleLogOut = () => {
+    router.post('/sign-out')
+  }
+
   return (
-    <QueryClientProvider client={new QueryClient()}>
+    <NoLayouts>
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <header className="flex justify-between pr-4 h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
@@ -58,6 +73,26 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="flex flex-row items-center gap-2">
+                  <Avatar>
+                    <AvatarFallback>{auth.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="">Hello, {auth.user.name}</span>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <User />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogOut}>
+                  <LogOut />
+                  LogOut
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
             {children}
@@ -70,6 +105,6 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
           </div>
         </SidebarInset>
       </SidebarProvider>
-    </QueryClientProvider>
+    </NoLayouts>
   )
 }

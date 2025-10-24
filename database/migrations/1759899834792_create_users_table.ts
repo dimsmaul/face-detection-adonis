@@ -22,6 +22,7 @@ export default class extends BaseSchema {
         .nullable()
         .references('id')
         .inTable('user_data')
+        .defaultTo(null)
         .onDelete('SET NULL')
 
       table.timestamp('created_at', { useTz: true }).notNullable()

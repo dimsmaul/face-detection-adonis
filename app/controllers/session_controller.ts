@@ -34,4 +34,15 @@ export default class SessionController {
       response.redirect().back()
     }
   }
+
+  async logout({ auth, response }: HttpContext) {
+    const isAdmin = await auth.use('admin').check()
+    if (isAdmin) {
+      await auth.use('admin').logout()
+    } else {
+      await auth.use('web').logout()
+    }
+
+    return response.redirect().toPath('/')
+  }
 }

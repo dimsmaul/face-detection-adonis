@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 @source "../views";
@@ -118,4 +118,136 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* SweetAlert2 Custom Styles - Using your exact CSS variables */
+
+/* Main popup styling using your CSS variables */
+.swal2-popup.custom-swal-popup {
+  background-color: var(--color-background) !important;
+  color: var(--color-foreground) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.swal2-title.custom-swal-title {
+  color: var(--color-foreground) !important;
+  font-weight: 600 !important;
+  font-size: 1.25rem !important;
+  margin: 0 0 1rem 0 !important;
+}
+
+.swal2-html-container.custom-swal-content {
+  color: var(--color-muted-foreground) !important;
+  font-size: 0.875rem !important;
+  margin: 0 0 1.5rem 0 !important;
+}
+
+/* Confirm button using your primary colors */
+.swal2-confirm.custom-swal-confirm {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+  border: 1px solid var(--color-primary) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.2s ease-in-out !important;
+  min-width: 80px !important;
+  cursor: pointer !important;
+}
+
+.swal2-confirm.custom-swal-confirm:hover {
+  opacity: 0.9 !important;
+  /* transform: translateY(-1px) !important; */
+}
+
+.swal2-confirm.custom-swal-confirm:focus {
+  outline: 2px solid var(--color-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* Cancel button using your secondary colors */
+.swal2-cancel.custom-swal-cancel {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-secondary-foreground) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.2s ease-in-out !important;
+  min-width: 80px !important;
+  cursor: pointer !important;
+}
+
+.swal2-cancel.custom-swal-cancel:hover {
+  background-color: var(--color-accent) !important;
+  color: var(--color-accent-foreground) !important;
+}
+
+.swal2-cancel.custom-swal-cancel:focus {
+  outline: 2px solid var(--color-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* Icon colors using your theme */
+.swal2-icon.swal2-question {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+.swal2-icon.swal2-success {
+  border-color: var(--color-chart-2) !important;
+  color: var(--color-chart-2) !important;
+}
+
+.swal2-icon.swal2-error {
+  border-color: var(--color-destructive) !important;
+  color: var(--color-destructive) !important;
+}
+
+.swal2-icon.swal2-warning {
+  border-color: var(--color-chart-1) !important;
+  color: var(--color-chart-1) !important;
+}
+
+.swal2-icon.swal2-info {
+  border-color: var(--color-chart-3) !important;
+  color: var(--color-chart-3) !important;
+}
+
+/* Actions container */
+.swal2-actions {
+  gap: 0.75rem !important;
+  margin: 1.5rem 0 0 0 !important;
+  justify-content: center !important;
+}
+
+/* Backdrop styling */
+.swal2-container {
+  backdrop-filter: blur(8px) !important;
+}
+
+.swal2-backdrop-show {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Remove default SweetAlert2 styling that might conflict */
+.swal2-popup.custom-swal-popup .swal2-styled {
+  margin: 0 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Ensure proper sizing */
+.swal2-popup.custom-swal-popup {
+  width: auto !important;
+  max-width: 32rem !important;
+  padding: 2rem !important;
 }

@@ -34,6 +34,21 @@ export default class AttendancesController {
     )
 
     const payload = await request.validateUsing(validator)
+
+    const getValidateData = await Attendance.query()
+      .where('user_id', request.input('userId'))
+      .andWhere('date', payload.date)
+      .first()
+
+    if (getValidateData) {
+      const attendance = await Attendance.findOrFail(getValidateData.id)
+      attendance.merge({
+        timeOut: payload.time,
+      })
+      await attendance.save()
+      await attendance.load('user')
+      return response.status(200).json(attendance)
+    }
     const attendance = await Attendance.create({
       ...payload,
       date: DateTime.fromISO(payload.date),

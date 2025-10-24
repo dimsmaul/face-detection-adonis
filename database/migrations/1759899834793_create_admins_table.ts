@@ -21,12 +21,14 @@ export default class extends BaseSchema {
         .nullable()
         .references('id')
         .inTable('positions')
+        .defaultTo(null)
         .onDelete('SET NULL')
       table
         .uuid('user_data_id')
         .nullable()
         .references('id')
         .inTable('user_data')
+        .defaultTo(null)
         .onDelete('SET NULL')
 
       table.timestamp('created_at')
