@@ -1,6 +1,6 @@
 import User from '#models/user'
 import UserDatum from '#models/user_datum'
-import MinioService from '#services/minio_service'
+// import MinioService from '#services/minio_service'
 import { SupabaseStorageService } from '#services/supabase_service'
 import type { HttpContext } from '@adonisjs/core/http'
 import vine from '@vinejs/vine'
@@ -8,7 +8,7 @@ import { DateTime } from 'luxon'
 import { readFileSync } from 'node:fs'
 
 export default class UsersController {
-  private minio = new MinioService()
+  // private minio = new MinioService()
   private supabase = new SupabaseStorageService()
   async index({ request, response }: HttpContext) {
     const { page = 1, limit = 10, search = '' } = request.qs()

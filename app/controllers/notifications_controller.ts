@@ -40,7 +40,9 @@ export default class NotificationsController {
       date: now,
       time: now.toFormat('HH:mm:ss'),
       title: 'notifications',
-      note: payload.nim ? `nim:${payload.nim},action:create_notification` : 'action:create_notification',
+      note: payload.nim
+        ? `nim:${payload.nim},action:create_notification`
+        : 'action:create_notification',
     })
 
     return response.status(201).json(notification)
@@ -77,7 +79,9 @@ export default class NotificationsController {
       date: now,
       time: now.toFormat('HH:mm:ss'),
       title: 'notifications',
-      note: notification.nim ? `nim:${notification.nim},action:update_notification` : 'action:update_notification',
+      note: notification.nim
+        ? `nim:${notification.nim},action:update_notification`
+        : 'action:update_notification',
     })
 
     return response.json(notification)
@@ -88,8 +92,8 @@ export default class NotificationsController {
    */
   async destroy({ params, response }: HttpContext) {
     const notification = await Notification.findOrFail(params.id)
-    const userId = notification.nim ? parseInt(notification.nim) : undefined
-    
+    // const userId = notification.nim ? parseInt(notification.nim) : undefined
+
     await notification.delete()
 
     // Log the notification deletion
@@ -98,7 +102,9 @@ export default class NotificationsController {
       date: now,
       time: now.toFormat('HH:mm:ss'),
       title: 'notifications',
-      note: notification.nim ? `nim:${notification.nim},action:delete_notification` : 'action:delete_notification',
+      note: notification.nim
+        ? `nim:${notification.nim},action:delete_notification`
+        : 'action:delete_notification',
     })
 
     return response.status(204).json({ message: 'Notification deleted successfully' })

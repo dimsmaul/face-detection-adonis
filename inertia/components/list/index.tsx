@@ -1,6 +1,8 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Braces } from 'lucide-react'
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '../ui/empty'
 
 type PaginationProps = {
   type: 'infinite-handle' | 'button-handle'
@@ -17,6 +19,7 @@ type ListProps<T> = {
   pagination?: PaginationProps
   handleNextPage?: () => void
   renderItem?: (item: T, index: number) => React.ReactNode
+  className?: string
 }
 
 export function List<T>({
@@ -26,7 +29,22 @@ export function List<T>({
   pagination,
   handleNextPage,
   renderItem,
+  className,
 }: ListProps<T>) {
+  if (data.length === 0) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Braces />
+          </EmptyMedia>
+          <EmptyTitle>No data</EmptyTitle>
+          <EmptyDescription>No data found</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    )
+  }
+
   return (
     <div className={cn('w-full space-y-4')}>
       {/* Render Items */}
@@ -34,7 +52,8 @@ export function List<T>({
         className={cn(
           type === 'card'
             ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'
-            : 'flex flex-col divide-y gap-4'
+            : 'flex flex-col divide-y gap-4',
+          className
         )}
       >
         {data.map((item, index) =>

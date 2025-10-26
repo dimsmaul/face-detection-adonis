@@ -6,6 +6,8 @@ import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import UserDatum from './user_datum.js'
 import type { HasMany, BelongsTo } from '@adonisjs/lucid/types/relations'
 import { v4 as uuidv4 } from 'uuid'
+import Attendance from './attendance.js'
+import Permit from './permit.js'
 // import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 // import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 // import type { HasMany } from '@adonisjs/lucid/types/relations'
@@ -59,10 +61,12 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare deletedAt: DateTime | null
 
   // Relationships
-  @hasMany(() => import('./attendance.js').then((m) => m.default))
+  // @hasMany(() => import('./attendance.js').then((m) => m.default))
+  @hasMany(() => Attendance, { foreignKey: 'userId' })
   declare attendances: HasMany<typeof import('./attendance.js').default>
 
-  @hasMany(() => import('./permit.js').then((m) => m.default))
+  // @hasMany(() => import('./permit.js').then((m) => m.default))
+  @hasMany(()=> Permit, { foreignKey: 'userId' })
   declare permits: HasMany<typeof import('./permit.js').default>
 
   @beforeCreate()

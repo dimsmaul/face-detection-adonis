@@ -1,4 +1,5 @@
 import Attendance from '#models/attendance'
+import Permit from '#models/permit'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 
@@ -9,7 +10,9 @@ export default class UserViewsController {
       .where('user_id', auth.user!.id)
       .andWhere('date', date.toISODate()!)
       .first()
-    return inertia.render('users/dashboard/pages/index', { attendance })
+
+    const leaveToday = await Permit.query().where('date', date.toISODate()!).preload('user')
+    return inertia.render('users/dashboard/pages/index', { attendance, permit: leaveToday })
   }
 
   async attendance({ request, auth, inertia }: HttpContext) {
@@ -46,19 +49,22 @@ export default class UserViewsController {
       })
     }
 
+    const sortingDaysDesc = days.sort((a, b) => (a.date < b.date ? 1 : -1))
+
     // Kirim ke Inertia
     return inertia.render('users/attendance/pages/index', {
       month,
       year,
-      data: days,
+      data: sortingDaysDesc,
     })
   }
 
-  async leave({ auth, inertia }: HttpContext) {
-    return inertia.render('users/leave/pages/index')
+  async leave({ inertia, auth }: HttpContext) {
+    const leave = await Permit.query().where('user_id', auth.user!.id).orderBy('date', 'desc')
+    return inertia.render('users/leave/pages/index', { leave })
   }
 
-  async logs({ auth, inertia }: HttpContext) {
+  async logs({ inertia }: HttpContext) {
     return inertia.render('users/logs/pages/index')
   }
 }

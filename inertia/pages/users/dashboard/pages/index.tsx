@@ -5,6 +5,7 @@ import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import Action from '../components/action'
 import Attendance from '../components/attendance'
+import Leave from '../components/leave'
 
 const Dashboard: React.FC = () => {
   const { auth } = usePage().props as any
@@ -35,15 +36,7 @@ const Dashboard: React.FC = () => {
         </CardContent>
       </Card>
       <Attendance />
-      <Card className="">
-        <CardHeader>
-          <CardTitle className="flex flex-row items-center gap-3">
-            <LogOut />
-            Who's Leave Today
-          </CardTitle>
-          <CardDescription>Here's your attendance overview for today</CardDescription>
-        </CardHeader>
-      </Card>
+      <Leave />
       <Action />
     </div>
   )
