@@ -53,8 +53,8 @@ const data = {
       icon: School,
     },
     {
-      name: 'Attendance Records',
-      url: '/admin/attendance-records',
+      name: 'Schedule',
+      url: '/admin/schedule',
       icon: BookMarked,
     },
   ],

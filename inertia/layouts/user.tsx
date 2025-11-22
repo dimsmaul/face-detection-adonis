@@ -39,7 +39,7 @@ const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.visit('/profile')}>
                   <User />
                   Profile
                 </DropdownMenuItem>

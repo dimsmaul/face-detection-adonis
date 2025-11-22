@@ -1,7 +1,9 @@
 import Admin from '#models/admin'
 import Position from '#models/position'
+import Schedule from '#models/schedule'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 
 export default class AdminViewsController {
   /**
@@ -91,5 +93,32 @@ export default class AdminViewsController {
     return inertia.render('admin/student/pages/action', {
       user,
     })
+  }
+
+  /**
+   * @Feat Schedule Management
+   */
+  async scheduleList({ inertia, request }: HttpContext) {
+    const month = Number(request.input('month', DateTime.now().month)) // default: bulan sekarang
+    const year = Number(request.input('year', DateTime.now().year)) // default: tahun sekarang
+
+    const data = await Schedule.query()
+      .whereRaw('EXTRACT(MONTH FROM date) = ?', [month])
+      .andWhereRaw('EXTRACT(YEAR FROM date) = ?', [year])
+      .orderBy('created_at', 'asc')
+
+    return inertia.render('admin/schedule/pages/index', { data })
+  }
+
+  async scheduleDetail({ params, inertia }: HttpContext) {
+    const date = params.date
+    const schedule = await User.query()
+      // .whereHas('attendances', (attendanceQuery) => {
+      //   attendanceQuery.where('date', date)
+      // })
+      .preload('attendances', (attendanceQuery) => {
+        attendanceQuery.where('date', date)
+      })
+    return inertia.render('admin/schedule/pages/detail', { data: schedule })
   }
 }

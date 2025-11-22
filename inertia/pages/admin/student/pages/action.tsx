@@ -4,8 +4,7 @@ import vine from '@vinejs/vine'
 import { Infer } from '@vinejs/vine/types'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { Eye } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { confirmAPIForm } from '~/components/alert'
 import { DatePicker } from '~/components/date-picker'
@@ -60,6 +59,8 @@ interface StudentActionPagesProps {
 }
 
 const StudentActionPages: React.FC<StudentActionPagesProps> = (props) => {
+  const isEditMode = props?.user?.id ? true : false
+  const formValidation = useMemo(() => createFormValidation(isEditMode), [isEditMode])
   const form = useForm<Infer<typeof formValidation>>({
     resolver: vineResolver(formValidation),
     defaultValues: {
@@ -103,7 +104,7 @@ const StudentActionPages: React.FC<StudentActionPagesProps> = (props) => {
     }
   }, [props.user?.id, form])
 
-  const onSubmit = (values: Infer<typeof formValidation>) => {
+  const onSubmit = async (values: Infer<typeof formValidation>) => {
     const formData = new FormData()
     // Object.keys(values).forEach((key) => {
     //   const value = (values as any)[key]
@@ -113,7 +114,7 @@ const StudentActionPages: React.FC<StudentActionPagesProps> = (props) => {
     // })
     formData.append('name', values.name)
     formData.append('email', values.email)
-    formData.append('password', values.password)
+    if (values.password) formData.append('password', values.password)
     formData.append('major', values.major || '')
     formData.append('status', values.status)
     if (values.profile instanceof File) {
@@ -136,10 +137,10 @@ const StudentActionPages: React.FC<StudentActionPagesProps> = (props) => {
     formData.append('postalCode', values.postalCode || '')
 
     confirmAPIForm({
-      callAPI: () =>
-        props.user?.id
-          ? axios.put(`/api/users/${props.user?.id}`, formData)
-          : axios.post('/api/users', formData),
+      callAPI: async () =>
+        isEditMode
+          ? await axios.put(`/api/users/${props.user?.id}`, formData)
+          : await axios.post('/api/users', formData),
       onAlertSuccess: () => {
         router.visit('/admin/students')
       },
@@ -390,23 +391,47 @@ const StudentActionPages: React.FC<StudentActionPagesProps> = (props) => {
 
 export default StudentActionPages
 
-const formValidation = vine.compile(
-  vine.object({
-    name: vine.string(),
-    email: vine.string().email(),
-    password: vine.string().minLength(6),
-    major: vine.string().optional(),
-    status: vine.string().minLength(1).maxLength(1),
-    dateOfAcceptance: vine.string().optional(),
-    profile: vine.any().optional(),
+const createFormValidation = (isEdit: boolean) => {
+  return vine.compile(
+    vine.object({
+      name: vine.string(),
+      email: vine.string().email(),
+      // Password is required for create, optional for edit
+      password: isEdit ? vine.string().optional() : vine.string().minLength(6),
+      major: vine.string().optional(),
+      status: vine.string().minLength(1).maxLength(1),
+      dateOfAcceptance: vine.string().optional(),
+      profile: vine.any().optional(),
+      // DATA
+      dob: vine.string().optional(),
+      address: vine.string().optional(),
+      phone: vine.string().optional(),
+      subDistrict: vine.string().optional(),
+      city: vine.string().optional(),
+      province: vine.string().optional(),
+      postalCode: vine.string().optional(),
+    })
+  )
+}
+// const formValidation = vine.compile(
+//   vine.object({
+//     name: vine.string(),
+//     email: vine.string().email(),
+//     // password opsional when edit user
+//     password: vine.string().minLength(6),
 
-    // DATA
-    dob: vine.string().optional(),
-    address: vine.string().optional(),
-    phone: vine.string().optional(),
-    subDistrict: vine.string().optional(),
-    city: vine.string().optional(),
-    province: vine.string().optional(),
-    postalCode: vine.string().optional(),
-  })
-)
+//     major: vine.string().optional(),
+//     status: vine.string().minLength(1).maxLength(1),
+//     dateOfAcceptance: vine.string().optional(),
+//     profile: vine.any().optional(),
+
+//     // DATA
+//     dob: vine.string().optional(),
+//     address: vine.string().optional(),
+//     phone: vine.string().optional(),
+//     subDistrict: vine.string().optional(),
+//     city: vine.string().optional(),
+//     province: vine.string().optional(),
+//     postalCode: vine.string().optional(),
+//   })
+// )

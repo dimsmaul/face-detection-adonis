@@ -6,14 +6,15 @@ import LeaveAction from './action'
 import { Card, CardContent } from '~/components/ui/card'
 import Preview from '~/components/preview'
 import dayjs from 'dayjs'
-import { DateTime } from 'luxon'
+import { useLeave } from '../hooks/useLeave'
 
-export interface AttendanceListProps {
+export interface LeaveListProps {
   leave: any[]
 }
 
-const AttendanceList: React.FC<AttendanceListProps> = (props) => {
+const LeaveList: React.FC<LeaveListProps> = (props) => {
   const [open, setOpen] = React.useState(false)
+  const { handleDelete } = useLeave()
   return (
     <div>
       <div className="flex flex-row items-center justify-between mb-4">
@@ -32,7 +33,7 @@ const AttendanceList: React.FC<AttendanceListProps> = (props) => {
                   <div className="">
                     <Preview label={'Date'} children={dayjs(item.date).format('DD MMM YYYY')} />
                   </div>
-                  <div className="">
+                  {/*<div className="">
                     <Preview
                       label={'Time'}
                       children={
@@ -43,9 +44,9 @@ const AttendanceList: React.FC<AttendanceListProps> = (props) => {
                           : '-'
                       }
                     />
-                  </div>
+                  </div>*/}
 
-                  <div className="col-span-2">
+                  <div className="col-span-3">
                     <Preview label={'Notes'} children={item.note || '-'} />
                   </div>
                   <div className="">
@@ -69,7 +70,11 @@ const AttendanceList: React.FC<AttendanceListProps> = (props) => {
                           <Button variant={'outline'} size={'icon'}>
                             <Edit />
                           </Button>
-                          <Button variant={'outline'} size={'icon'}>
+                          <Button
+                            variant={'outline'}
+                            size={'icon'}
+                            onClick={() => handleDelete(item.id)}
+                          >
                             <Trash />
                           </Button>
                         </div>
@@ -87,4 +92,4 @@ const AttendanceList: React.FC<AttendanceListProps> = (props) => {
   )
 }
 
-export default AttendanceList
+export default LeaveList

@@ -52,6 +52,7 @@ export default class AttendancesController {
     const attendance = await Attendance.create({
       ...payload,
       date: DateTime.fromISO(payload.date),
+      status: 1,
     })
 
     // Log the attendance creation
@@ -79,37 +80,38 @@ export default class AttendancesController {
   /**
    * Handle form submission for the edit action
    */
-  async update({ params, request, response }: HttpContext) {
-    const attendance = await Attendance.findOrFail(params.id)
+  async update({}: HttpContext) {
+    // const attendance = await Attendance.findOrFail(params.id)
 
-    const validator = vine.compile(
-      vine.object({
-        userId: vine.string().uuid().optional(),
-        date: vine.string().optional(),
-        time: vine.string().optional(),
-        note: vine.string().optional(),
-      })
-    )
+    // const validator = vine.compile(
+    //   vine.object({
+    //     userId: vine.string().uuid().optional(),
+    //     date: vine.string().optional(),
+    //     time: vine.string().optional(),
+    //     note: vine.string().optional(),
+    //   })
+    // )
 
-    const payload = await request.validateUsing(validator)
-    const updateData = { ...payload }
-    if (payload.date) {
-      updateData.date = DateTime.fromISO(payload.date)
-    }
-    attendance.merge(updateData)
-    await attendance.save()
+    // const payload = await request.validateUsing(validator)
+    // const updateData = { ...payload }
+    // if (payload.date) {
+    //   updateData.date = DateTime.fromISO(payload.date)
+    // }
+    // attendance.merge(updateData)
+    // await attendance.save()
 
-    // Log the attendance update
-    const now = DateTime.now()
-    await Log.create({
-      date: now,
-      time: now.toFormat('HH:mm:ss'),
-      title: 'attendances',
-      note: `user_id:${attendance.userId},action:update_attendance`,
-    })
+    // // Log the attendance update
+    // const now = DateTime.now()
+    // await Log.create({
+    //   date: now,
+    //   time: now.toFormat('HH:mm:ss'),
+    //   title: 'attendances',
+    //   note: `user_id:${attendance.userId},action:update_attendance`,
+    // })
 
-    await attendance.load('user')
-    return response.json(attendance)
+    // await attendance.load('user')
+    // return response.json(attendance)
+    return {}
   }
 
   /**

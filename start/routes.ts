@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const SchedulesController = () => import('#controllers/schedules_controller')
 
 const SessionController = () => import('#controllers/session_controller')
 const AdminsController = () => import('#controllers/admins_controller')
@@ -52,6 +53,7 @@ router
     router.get('/attendance', [UserViewsController, 'attendance'])
     router.get('/leave', [UserViewsController, 'leave'])
     router.get('/logs', [UserViewsController, 'logs'])
+    router.get('/profile', [UserViewsController, 'profile'])
   })
   .use(middleware.auth({ guards: ['web'] }))
 
@@ -83,6 +85,14 @@ router
     router.get('/students', [AdminViewsController, 'userList'])
     router.get('/students/action', [AdminViewsController, 'createUser'])
     router.get('/students/action/:id', [AdminViewsController, 'editUser'])
+
+    /**
+     * @Feat Admin Schedule Management
+     */
+    router.get('/schedule', [AdminViewsController, 'scheduleList'])
+    router.get('/schedule/:date', [AdminViewsController, 'scheduleDetail'])
+    // router.get('/schedule/action', [AdminViewsController, 'createSchedule'])
+    // router.get('/schedule/action/:id', [AdminViewsController, 'editSchedule'])
   })
   .prefix('/admin')
   .use(middleware.auth({ guards: ['admin'] }))
@@ -134,6 +144,13 @@ router
     // Logs (Read-only - logs are created automatically by system)
     router.get('/logs', [LogsController, 'index'])
     router.get('/logs/:id', [LogsController, 'show'])
+
+    // Schedule CRUD
+    // router.get('/schedules', [SchedulesController, 'index'])
+    router.post('/schedules', [SchedulesController, 'store'])
+    router.get('/schedules/:date', [SchedulesController, 'show'])
+    router.put('/schedules/:id', [SchedulesController, 'update'])
+    router.delete('/schedules/:id', [SchedulesController, 'destroy'])
 
     // Notifications CRUD
     router.get('/notifications', [NotificationsController, 'index'])

@@ -41,9 +41,6 @@ export default class Admin extends compose(BaseModel, AuthFinder) {
   @column()
   declare status: number | null
 
-  // @column.dateTime()
-  // declare dateOfAcceptance: DateTime | null
-
   @belongsTo(() => UserDatum, { foreignKey: 'userDataId' })
   declare userData: BelongsTo<typeof UserDatum>
 

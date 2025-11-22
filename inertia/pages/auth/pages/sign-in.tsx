@@ -15,6 +15,8 @@ import {
 import { Head, Link } from '@inertiajs/react'
 import { Input } from '~/components/ui/input'
 import { Inertia } from '@inertiajs/inertia'
+import axios from 'axios'
+import { callAlert } from '~/components/alert'
 
 export default function SignIn() {
   //   const { setUsers } = useAuthStore();
@@ -26,8 +28,22 @@ export default function SignIn() {
     },
   })
 
-  function onSubmit(values: Infer<typeof formSchema>) {
-    Inertia.post('/sign-in', { ...values })
+  async function onSubmit(values: Infer<typeof formSchema>) {
+    // alert('Login function is disabled in demo version.')
+    await axios
+      .post('/sign-in', { ...values })
+      .then((response) => {
+        Inertia.visit(response.data.redirect)
+      })
+      .catch((error) => {
+        console.log(error.response.data)
+        callAlert({
+          title: 'Login Failed',
+          message: error.response.data || 'An error occurred during login.',
+          // onConfirm: () => {},
+          type: 'error',
+        })
+      })
   }
 
   return (

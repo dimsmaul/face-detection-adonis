@@ -8,8 +8,11 @@ import Camera from './camera'
 import { DateTime } from 'luxon'
 
 const Attendance: React.FC = () => {
-  const { auth, attendance } = usePage().props as any
+  const { auth, attendance, permit, scheduled } = usePage().props as any
   const [open, setOpen] = React.useState(false)
+
+  // {JSON.stringify(permit.find((item: { userId: string }) => item.userId === auth.user?.id))}
+  const userPermit = permit.find((item: { userId: string }) => item.userId === auth.user?.id)
 
   return (
     <>
@@ -48,10 +51,14 @@ const Attendance: React.FC = () => {
               </span>
             </div>
           </div>
-          {(attendance === null || attendance?.timeOut === null) && (
-            <Button className="w-full" onClick={() => setOpen(true)}>
-              {attendance == null ? 'Clock In' : 'Clock Out'}
-            </Button>
+          {!userPermit && (
+            <>
+              {(attendance === null || attendance?.timeOut === null) && (
+                <Button className="w-full" onClick={() => setOpen(true)}>
+                  {attendance == null ? 'Clock In' : 'Clock Out'}
+                </Button>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

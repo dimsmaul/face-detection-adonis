@@ -110,7 +110,7 @@ export default class UsersController {
       vine.object({
         name: vine.string().optional(),
         email: vine.string().email(),
-        password: vine.string().minLength(6),
+        password: vine.string().optional(),
         subject: vine.string().optional(),
         status: vine.number().optional(),
         major: vine.string().optional(),

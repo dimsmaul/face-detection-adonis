@@ -20,6 +20,7 @@ import { confirmAPIForm } from '~/components/alert'
 import axios from 'axios'
 import { Button } from '~/components/ui/button'
 import { router } from '@inertiajs/react'
+import { DateTime } from 'luxon'
 
 export interface LeaveForm {
   open: boolean
@@ -27,11 +28,13 @@ export interface LeaveForm {
 }
 
 const LeaveAction: React.FC<LeaveForm> = ({ open, onOpenChange }) => {
+  const date = DateTime.now().setZone('Asia/Jakarta')
   const form = useForm<Infer<typeof formSchema>>({
     resolver: vineResolver(formSchema),
     defaultValues: {
       date: undefined,
-      time: dayjs().format('HH:mm:ss'),
+      // time: dayjs().format('HH:mm:ss'),
+      time: date.toFormat('HH:mm:ss'),
       note: '',
       attachment: null,
     },

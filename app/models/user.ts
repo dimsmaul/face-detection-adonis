@@ -1,13 +1,21 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasMany, beforeCreate, belongsTo } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  column,
+  hasMany,
+  beforeCreate,
+  belongsTo,
+  manyToMany,
+} from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import UserDatum from './user_datum.js'
-import type { HasMany, BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { HasMany, BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { v4 as uuidv4 } from 'uuid'
 import Attendance from './attendance.js'
 import Permit from './permit.js'
+import Schedule from './schedule.js'
 // import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 // import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 // import type { HasMany } from '@adonisjs/lucid/types/relations'
@@ -51,6 +59,21 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @belongsTo(() => UserDatum, { foreignKey: 'userDataId' })
   declare userData: BelongsTo<typeof UserDatum>
 
+  @hasMany(() => Attendance, { foreignKey: 'userId' })
+  declare attendances: HasMany<typeof import('./attendance.js').default>
+
+  @hasMany(() => Permit, { foreignKey: 'userId' })
+  declare permits: HasMany<typeof import('./permit.js').default>
+
+  // @manyToMany(() => Schedule, {
+  //   pivotTable: 'attendances',
+  //   localKey: 'id',
+  //   pivotForeignKey: 'user_id',
+  //   relatedKey: 'id',
+  //   pivotRelatedForeignKey: 'service_id',
+  // })
+  // declare schedules: ManyToMany<typeof Schedule>
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -59,15 +82,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column.dateTime()
   declare deletedAt: DateTime | null
-
-  // Relationships
-  // @hasMany(() => import('./attendance.js').then((m) => m.default))
-  @hasMany(() => Attendance, { foreignKey: 'userId' })
-  declare attendances: HasMany<typeof import('./attendance.js').default>
-
-  // @hasMany(() => import('./permit.js').then((m) => m.default))
-  @hasMany(()=> Permit, { foreignKey: 'userId' })
-  declare permits: HasMany<typeof import('./permit.js').default>
 
   @beforeCreate()
   static assignUuid(user: User) {

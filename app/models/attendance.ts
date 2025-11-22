@@ -3,6 +3,7 @@ import { BaseModel, column, belongsTo, beforeCreate } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import { v4 as uuidv4 } from 'uuid'
+import Schedule from './schedule.js'
 
 export default class Attendance extends BaseModel {
   @column({ isPrimary: true })
@@ -34,6 +35,9 @@ export default class Attendance extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @belongsTo(() => Schedule)
+  declare schedule: BelongsTo<typeof Schedule>
 
   @beforeCreate()
   static assignUuid(data: Attendance) {
