@@ -90,7 +90,7 @@ const AttendanceList: React.FC<AttendanceResponse> = (props) => {
                               | 'outline'
                           }
                         >
-                          {['Pending', 'Presence', 'Leave', 'Absent'][item.status]}
+                          {['Pending', 'Present', 'Leave', 'Absent'][item.status]}
                         </Badge>
                       }
                     />

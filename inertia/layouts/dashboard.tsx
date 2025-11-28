@@ -20,6 +20,8 @@ import {
 } from '~/components/ui/dropdown-menu'
 import { LogOut, User } from 'lucide-react'
 import NoLayouts from './no-layout'
+import { AnimatedThemeToggler } from '~/components/ui/animated-theme-toggler'
+import { Button } from '~/components/ui/button'
 
 export default function Dashboard({ children }: { children: React.ReactNode }) {
   const { auth } = usePage().props as any
@@ -73,26 +75,31 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="flex flex-row items-center gap-2">
-                  <Avatar>
-                    <AvatarFallback>{auth.user.name.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <span className="">Hello, {auth.user.name}</span>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <User />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogOut}>
-                  <LogOut />
-                  LogOut
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex flex-row gap-2 items-center">
+              <Button variant={'ghost'} size={'icon'}>
+                <AnimatedThemeToggler />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <div className="flex flex-row items-center gap-2">
+                    <Avatar>
+                      <AvatarFallback>{auth.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="">Hello, {auth.user.name}</span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => router.visit('/admin/profile')}>
+                    <User />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogOut}>
+                    <LogOut />
+                    LogOut
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
             {children}

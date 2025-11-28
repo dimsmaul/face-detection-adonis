@@ -44,7 +44,7 @@ export const callAlert = ({
       cancelButton: 'custom-swal-cancel',
       actions: 'custom-swal-actions',
     },
-    html: `<div style="padding-bottom: 20px;" class="border-b-[1.5px]"><p class="text-3xl font-medium">${title}</p><div style="font-size:16px; margin-top:10px;padding-left: 0.9rem;padding-right:0.9rem">${message}</div></div>`,
+    html: `<div style="padding-bottom: 20px;" class="border-b-[1.5px] z-50"><p class="text-3xl font-medium z-50">${title}</p><div style="font-size:16px; margin-top:10px;padding-left: 0.9rem;padding-right:0.9rem">${message}</div></div>`,
     icon,
     iconColor,
     width: 400,

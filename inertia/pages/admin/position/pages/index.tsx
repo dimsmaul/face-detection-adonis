@@ -3,15 +3,7 @@ import { DataTable } from '~/components/table'
 import InputSearchDebounce from '~/components/search'
 import { router } from '@inertiajs/react'
 import { Button } from '~/components/ui/button'
-import { Ellipsis, Plus } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu'
+import { Edit, Plus, Trash } from 'lucide-react'
 import { IAdminPositionResponse } from '../types/types'
 import { confirmAPIForm } from '~/components/alert'
 import axios from 'axios'
@@ -55,10 +47,11 @@ const PositionPages: React.FC<IAdminPositionResponse> = (props) => {
     confirmAPIForm({
       callAPI: () => axios.delete('/api/positions/' + id),
       onAlertSuccess: () => {
-        router.get('/admin/positions', {
-          search: search,
-          page: meta.currentPage,
-        })
+        router.reload({ only: ['data'] })
+        // router.get('/admin/positions', {
+        //   search: search,
+        //   page: meta.currentPage,
+        // })
       },
     })
   }
@@ -91,27 +84,43 @@ const PositionPages: React.FC<IAdminPositionResponse> = (props) => {
               cell: ({ row }) => {
                 // const id = row.getValue('id')
                 return (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button size={'icon'} variant={'outline'}>
-                        <Ellipsis />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() =>
-                          router.visit(`/admin/positions/action/${row.getValue('id')}`)
-                        }
-                      >
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDelete(row.getValue('id'))}>
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div className="flex flex-row gap-2">
+                    <Button
+                      size={'sm'}
+                      variant={'outline'}
+                      onClick={() => router.visit(`/admin/positions/action/${row.original.id}`)}
+                    >
+                      <Edit />
+                    </Button>
+                    <Button
+                      size={'sm'}
+                      variant={'destructive'}
+                      onClick={() => handleDelete(row.original.id)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                  // <DropdownMenu>
+                  //   <DropdownMenuTrigger>
+                  //     <Button size={'icon'} variant={'outline'}>
+                  //       <Ellipsis />
+                  //     </Button>
+                  //   </DropdownMenuTrigger>
+                  //   <DropdownMenuContent>
+                  //     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  //     <DropdownMenuSeparator />
+                  //     <DropdownMenuItem
+                  //       onClick={() =>
+                  //         router.visit(`/admin/positions/action/${row.getValue('id')}`)
+                  //       }
+                  //     >
+                  //       Edit
+                  //     </DropdownMenuItem>
+                  //     <DropdownMenuItem onClick={() => handleDelete(row.getValue('id'))}>
+                  //       Delete
+                  //     </DropdownMenuItem>
+                  //   </DropdownMenuContent>
+                  // </DropdownMenu>
                 )
               },
             },

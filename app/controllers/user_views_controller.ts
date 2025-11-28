@@ -16,7 +16,7 @@ export default class UserViewsController {
 
     const permit = date.setZone('Asia/Jakarta')
     const leaveToday = await Permit.query().where('date', permit.toISODate()!).preload('user')
-    const scheduled = await Schedule.query().where('date', date.toISODate()!).first()
+    const scheduled = await Schedule.query().where('date', permit.toISODate()!).first()
 
     return inertia.render('users/dashboard/pages/index', {
       attendance,

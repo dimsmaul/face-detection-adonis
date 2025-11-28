@@ -4,7 +4,9 @@ import { router } from '@inertiajs/react'
 import { DataTable } from '~/components/table'
 import InputSearchDebounce from '~/components/search'
 import { Button } from '~/components/ui/button'
-import { Edit, Plus } from 'lucide-react'
+import { Edit, Plus, Trash } from 'lucide-react'
+import axios from 'axios'
+import { confirmAPIForm } from '~/components/alert'
 
 const StudentPages: React.FC<IStudentResponse> = (props) => {
   const [search, setSearch] = React.useState<string>('')
@@ -40,6 +42,12 @@ const StudentPages: React.FC<IStudentResponse> = (props) => {
         replace: true,
       }
     )
+  }
+  const handleDelete = (id: string) => {
+    confirmAPIForm({
+      callAPI: async () => await axios.delete(`/api/users/${id}`),
+      onAlertSuccess: () => router.reload({ only: ['data'] }),
+    })
   }
   return (
     <div className="flex flex-col gap-3">
@@ -80,13 +88,20 @@ const StudentPages: React.FC<IStudentResponse> = (props) => {
               accessorKey: 'id',
               header: 'Action',
               cell: ({ row }) => (
-                <div>
+                <div className="flex flex-row gap-2">
                   <Button
                     size={'sm'}
                     variant={'outline'}
                     onClick={() => router.visit(`/admin/students/action/${row.original.id}`)}
                   >
                     <Edit />
+                  </Button>
+                  <Button
+                    size={'sm'}
+                    variant={'destructive'}
+                    onClick={() => handleDelete(row.original.id)}
+                  >
+                    <Trash />
                   </Button>
                 </div>
               ),

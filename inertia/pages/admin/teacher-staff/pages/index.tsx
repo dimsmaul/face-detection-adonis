@@ -4,19 +4,13 @@ import { IAdminResponse } from '../types/types'
 import InputSearchDebounce from '~/components/search'
 import { router } from '@inertiajs/react'
 import { Button } from '~/components/ui/button'
-import { Eclipse, Ellipsis, Plus } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '~/components/ui/dropdown-menu'
+import { Delete, Edit, Plus, Trash } from 'lucide-react'
+import { confirmAPIForm } from '~/components/alert'
+import axios from 'axios'
 
 const AdminTeacherPages: React.FC<IAdminResponse> = (props) => {
   const [search, setSearch] = React.useState<string>('')
-// const navigate = useNavi
+  // const navigate = useNavi
   const meta = props.data?.meta
   const data = props.data?.data
 
@@ -49,6 +43,13 @@ const AdminTeacherPages: React.FC<IAdminResponse> = (props) => {
         replace: true,
       }
     )
+  }
+
+  const handleDelete = (id: string) => {
+    confirmAPIForm({
+      callAPI: () => axios.delete(`/admin/teachers-staff/${id}`),
+      onAlertSuccess: () => router.reload({ only: ['data'] }),
+    })
   }
   return (
     <div className="flex flex-col gap-3">
@@ -87,19 +88,43 @@ const AdminTeacherPages: React.FC<IAdminResponse> = (props) => {
               cell: ({ row }) => {
                 // const id = row.getValue('id')
                 return (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button size={'icon'} variant={'outline'}>
-                        <Ellipsis />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div className="flex flex-row gap-2">
+                    <Button
+                      size={'sm'}
+                      variant={'outline'}
+                      onClick={() =>
+                        router.visit(`/admin/teachers-staff/action/${row.original.id}`)
+                      }
+                    >
+                      <Edit />
+                    </Button>
+                    <Button
+                      size={'sm'}
+                      variant={'destructive'}
+                      onClick={() => handleDelete(row.original.id)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                  // <DropdownMenu>
+                  //   <DropdownMenuTrigger>
+                  //     <Button size={'icon'} variant={'outline'}>
+                  //       <Ellipsis />
+                  //     </Button>
+                  //   </DropdownMenuTrigger>
+                  //   <DropdownMenuContent>
+                  //     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  //     <DropdownMenuSeparator />
+                  //     <DropdownMenuItem
+                  //       onClick={() => {
+                  //         router.visit('/admin/teachers-staff/action/' + row.getValue('id'))
+                  //       }}
+                  //     >
+                  //       Edit
+                  //     </DropdownMenuItem>
+                  //     <DropdownMenuItem>Delete</DropdownMenuItem>
+                  //   </DropdownMenuContent>
+                  // </DropdownMenu>
                 )
               },
             },

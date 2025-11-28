@@ -1,9 +1,11 @@
 import { vineResolver } from '@hookform/resolvers/vine'
 import vine from '@vinejs/vine'
 import { Infer } from '@vinejs/vine/types'
+import axios from 'axios'
 import dayjs from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { confirmAPIForm } from '~/components/alert'
 import { DatePicker } from '~/components/date-picker'
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog'
@@ -22,6 +24,8 @@ import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group'
 export interface ScheduleFormProps {
   open: boolean
   onClose: () => void
+  onSuccess: () => void
+  id?: number
 }
 
 const ScheduleForm: React.FC<ScheduleFormProps> = (props) => {
@@ -34,9 +38,41 @@ const ScheduleForm: React.FC<ScheduleFormProps> = (props) => {
     },
   })
 
-  const onSubmit = (data: Infer<typeof validation>) => {
-    console.log(data)
+  const onSubmit = async (data: Infer<typeof validation>) => {
+    if (props.id) {
+      confirmAPIForm({
+        callAPI: async () => await axios.put(`/api/schedules/${props.id}`, data),
+        onAlertSuccess: () => {
+          props.onSuccess()
+        },
+      })
+      return
+    }
+    confirmAPIForm({
+      callAPI: async () => await axios.post('/api/schedules', data),
+      onAlertSuccess: () => {
+        props.onSuccess()
+      },
+    })
   }
+
+  const getDetailWhenEdit = async (id: number) => {
+    const response = await axios.get(`/api/schedules/show/${id}`)
+    const schedule = response.data.data
+    console.log('schedule', response)
+    form.reset({
+      date: dayjs(schedule.date).format('YYYY-MM-DD'),
+      time: schedule.time,
+      type: schedule.type,
+    })
+  }
+
+  useEffect(() => {
+    if (props.id) {
+      getDetailWhenEdit(props.id)
+    }
+  }, [props.id])
+
   return (
     <Dialog open={props.open} onOpenChange={props.onClose}>
       <DialogContent>
@@ -55,7 +91,11 @@ const ScheduleForm: React.FC<ScheduleFormProps> = (props) => {
                     <FormItem>
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <DatePicker placeholder="Input date" {...field} />
+                        <DatePicker
+                          placeholder="Input date"
+                          date={new Date(field.value)}
+                          onChange={(date) => field.onChange(dayjs(date).format('YYYY-MM-DD'))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -79,7 +119,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = (props) => {
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Time</FormLabel>
+                      <FormLabel>Type</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}

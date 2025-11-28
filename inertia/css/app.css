@@ -251,3 +251,7 @@
   max-width: 32rem !important;
   padding: 2rem !important;
 }
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}

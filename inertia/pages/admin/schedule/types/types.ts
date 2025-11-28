@@ -28,6 +28,7 @@ export interface ScheduleDetailType {
   updatedAt: Date
   deletedAt: null
   attendances: ScheduleDetailTypeAttendance[]
+  permits: ScheduleDetailTypePermit[]
 }
 
 export interface ScheduleDetailTypeAttendance {
@@ -38,6 +39,17 @@ export interface ScheduleDetailTypeAttendance {
   note: string
   status: number
   userId: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface ScheduleDetailTypePermit {
+  id: string
+  userId: string
+  date: Date
+  time: string
+  note: string
+  attachment: string
   createdAt: Date
   updatedAt: Date
 }

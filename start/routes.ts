@@ -63,13 +63,14 @@ router
 
 router
   .group(() => {
-    router.on('/dashboard').renderInertia('admin/dashboard/pages/index').as('admin.dashboard')
+    router.get('/dashboard', [AdminViewsController, 'dashboard'])
 
     /**
      * @Feat Admin Teacher & Staff Management
      */
     router.get('/teachers-staff', [AdminViewsController, 'list'])
     router.get('/teachers-staff/action', [AdminViewsController, 'create'])
+    router.get('/teachers-staff/action/:id', [AdminViewsController, 'edit'])
 
     /**
      * @Feat Admin Position Management
@@ -93,6 +94,11 @@ router
     router.get('/schedule/:date', [AdminViewsController, 'scheduleDetail'])
     // router.get('/schedule/action', [AdminViewsController, 'createSchedule'])
     // router.get('/schedule/action/:id', [AdminViewsController, 'editSchedule'])
+
+    /**
+     * @Feat Admin Profile Management
+     */
+    router.get('/profile', [AdminViewsController, 'profile'])
   })
   .prefix('/admin')
   .use(middleware.auth({ guards: ['admin'] }))
@@ -149,8 +155,10 @@ router
     // router.get('/schedules', [SchedulesController, 'index'])
     router.post('/schedules', [SchedulesController, 'store'])
     router.get('/schedules/:date', [SchedulesController, 'show'])
+    router.get('/schedules/show/:id', [SchedulesController, 'showId'])
     router.put('/schedules/:id', [SchedulesController, 'update'])
     router.delete('/schedules/:id', [SchedulesController, 'destroy'])
+    router.post('/schedules/import', [SchedulesController, 'upload'])
 
     // Notifications CRUD
     router.get('/notifications', [NotificationsController, 'index'])

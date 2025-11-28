@@ -9,6 +9,8 @@ import {
 } from '~/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { User, LogOut } from 'lucide-react'
+import { Button } from '~/components/ui/button'
+import { AnimatedThemeToggler } from '~/components/ui/animated-theme-toggler'
 
 const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { auth } = usePage().props as any
@@ -23,7 +25,10 @@ const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
           <div onClick={() => router.visit('/dashboard')} className="cursor-pointer">
             <h1 className="text-lg font-semibold">NgabsenYuk</h1>
           </div>
-          <div>
+          <div className="flex flex-row gap-2 items-center">
+            <Button variant={'ghost'} size={'icon'}>
+              <AnimatedThemeToggler />
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex flex-row items-center gap-2">

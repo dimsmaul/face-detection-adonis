@@ -6,7 +6,7 @@ import Attendance from './attendance.js'
 
 export default class Schedule extends BaseModel {
   @column({ isPrimary: true })
-  declare id: string
+  declare id: number
 
   @column()
   declare date: DateTime
@@ -34,8 +34,8 @@ export default class Schedule extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @beforeCreate()
-  static assignUuid(data: Schedule) {
-    data.id = uuidv4()
-  }
+  // @beforeCreate()
+  // static assignUuid(data: Schedule) {
+  //   data.id = uuidv4()
+  // }
 }

@@ -1,4 +1,6 @@
 import Admin from '#models/admin'
+import Attendance from '#models/attendance'
+import Permit from '#models/permit'
 import Position from '#models/position'
 import Schedule from '#models/schedule'
 import User from '#models/user'
@@ -6,6 +8,59 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 
 export default class AdminViewsController {
+  /**
+   * @Feat Dashboard
+   */
+
+  async dashboard({ inertia }: HttpContext) {
+    const date = DateTime.now()
+    const permit = date.setZone('Asia/Jakarta')
+    const leaveToday = await Permit.query().where('date', permit.toISODate()!).preload('user')
+
+    // compare presence with absent today
+    // const attendanceToday = await Attendance.query().where('date', permit.toISODate()!)
+    const userPresence = await User.query()
+      .preload('attendances', (attendanceQuery) => {
+        attendanceQuery.where('date', permit.toISODate()!)
+      })
+      .preload('permits', (permitQuery) => {
+        permitQuery.where('date', permit.toISODate()!)
+      })
+
+    const present = userPresence.filter((u) => u.attendances.length > 0).length
+    const leave = userPresence.filter((u) => u.permits.length > 0).length
+
+    const compare = {
+      present,
+      leave,
+      absent: userPresence.length - (present + leave),
+    }
+
+    // prensence report per-month in this year
+    const year = date.year
+    const monthlyPresence = await Attendance.query()
+      .whereRaw('EXTRACT(YEAR FROM date) = ?', [year])
+      .select(Attendance.query().client.raw('EXTRACT(MONTH FROM date) AS month'))
+      .count('* AS count')
+      .groupByRaw('EXTRACT(MONTH FROM date)')
+      .orderByRaw('EXTRACT(MONTH FROM date) ASC')
+
+    const monthlyData: { month: number; count: number }[] = []
+    for (let month = 1; month <= 12; month++) {
+      const monthData = monthlyPresence.find((m) => Number(m.$extras.month) === month)
+      monthlyData.push({
+        month,
+        count: monthData ? Number(monthData.$extras.count) : 0,
+      })
+    }
+
+    return inertia.render('admin/dashboard/pages/index', {
+      permit: leaveToday,
+      compare,
+      monthlyData,
+    })
+  }
+
   /**
    * @Feat Teacher & Staff Management
    */
@@ -34,6 +89,17 @@ export default class AdminViewsController {
     const position = await Position.all()
 
     return inertia.render('admin/teacher-staff/pages/action', {
+      position,
+    })
+  }
+
+  async edit({ params, inertia }: HttpContext) {
+    const { id } = params
+    const admin = await Admin.query().where('id', id).preload('userData').firstOrFail()
+    const position = await Position.all()
+
+    return inertia.render('admin/teacher-staff/pages/action', {
+      admin,
       position,
     })
   }
@@ -112,13 +178,32 @@ export default class AdminViewsController {
 
   async scheduleDetail({ params, inertia }: HttpContext) {
     const date = params.date
-    const schedule = await User.query()
-      // .whereHas('attendances', (attendanceQuery) => {
-      //   attendanceQuery.where('date', date)
-      // })
+    const schedule = await Schedule.query().where('date', date).firstOrFail()
+
+    const user = await User.query()
       .preload('attendances', (attendanceQuery) => {
         attendanceQuery.where('date', date)
       })
-    return inertia.render('admin/schedule/pages/detail', { data: schedule })
+      .preload('permits', (permitQuery) => {
+        permitQuery.where('date', date)
+      })
+      .orderBy('name', 'asc')
+
+    return inertia.render('admin/schedule/pages/detail', { data: user, schedule })
+  }
+
+  /**
+   * @Feat Profile Management
+   */
+  async profile({ inertia, auth }: HttpContext) {
+    const admin = await Admin.query()
+      .where('id', auth.user!.id)
+      .preload('position')
+      .preload('userData')
+      .firstOrFail()
+
+    return inertia.render('admin/profile/pages/index', {
+      data: admin,
+    })
   }
 }
